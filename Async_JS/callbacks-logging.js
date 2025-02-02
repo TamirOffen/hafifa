@@ -13,14 +13,14 @@ function maybeLog(message, errorChance) {
 }
 
 function maybeLogAfterMs(message, ms, done) {
-    // const errorChance = Math.random();
+    const errorChance = Math.random();
 
     setTimeout(() => {
         try {
-            maybeLog(message, 0.5);
-            done();
+            maybeLog(message, errorChance);
+            done(null, errorChance);
         } catch (err) {
-            console.log(err);
+            done(err);
         }
         
     }, ms);
@@ -29,10 +29,17 @@ function maybeLogAfterMs(message, ms, done) {
 
 logAfterMs("1", 0, ()=> {
     logAfterMs("2", 1, ()=>{
-        maybeLogAfterMs("3", 10, ()=>{
-            logAfterMs("4", 5, ()=>{
-                logAfterMs("5", 0, ()=>{})
-            })
+        maybeLogAfterMs("3", 10, (err, errorChance)=>{
+            if (err) {
+                console.log(err);
+            } else {
+                if (errorChance > 0.8) {
+                    console.log("4: This is very rare!");
+                } else {
+                    console.log("4: This is very common!");
+                }
+                logAfterMs("5", errorChance*1_000, ()=>{})
+            }
         })
     })
 });
