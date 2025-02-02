@@ -39,6 +39,8 @@ logAfterMs("1", 0, ()=> {
                     console.log("4: This is very common!");
                 }
                 logAfterMs("5", errorChance*1_000, ()=>{})
+                logAfterMs("Hi five", 5, ()=>{});
+                logAfterMs("Take five", 6, ()=>{});
             }
         })
     })
