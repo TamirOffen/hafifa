@@ -17,25 +17,37 @@ function maybeLog(message, errorChance) {
 function maybeLogAfterMs(message, ms) {
     return new Promise((resolve, reject) => {
         try {
-            maybeLog(message, 0.5);
-            resolve("finished");
+            const errorChance = Math.random();
+            setTimeout(() => {
+                maybeLog(message, errorChance);
+                resolve(errorChance);
+            }, ms);
         } catch (err) {
             reject(err);
         }
     })
 }
 
+
+let chance;
 logAfterMs("1", 0).then((result) => {
     return logAfterMs("2", 1);
 })
 .then((result) => {
     return maybeLogAfterMs("3", 10);
 })
-.then((result) => {
-    return logAfterMs("4", 5);
+.then((errorChance) => {
+    chance = errorChance;
+    if(errorChance > 0.8) {
+        return logAfterMs("4: This is very rare!", 5);
+    } else {
+        return logAfterMs("4: This is very common!", 5);
+    }
 })
 .then(result => {
-    console.log("5");
+    logAfterMs("5", chance*1_000);
+    logAfterMs("Hi 5", 5)
+    logAfterMs("Take 5", 6)
 })
 .catch(err => {
     console.log(err);
