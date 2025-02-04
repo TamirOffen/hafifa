@@ -28,7 +28,9 @@ async function run() {
         } else {
             await logAfterMs("4: This is very common!", 5);
         }
-        await logAfterMs("5", errorChance*1_000);
+        await Promise.all([logAfterMs("5", errorChance*1_000),
+        logAfterMs("Hi 5", 5),
+        logAfterMs("Take 5", 6)])
     } catch (err) {
         console.log(err);
     }
